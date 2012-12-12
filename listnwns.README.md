@@ -10,8 +10,8 @@ web service methods.
 Requirements:
 -------------
 
-ssl - usually installed with a base OS install
-gsoap - may be optained under Fedora Core with "yum install gsoap gsoap-devel"
+* ssl - usually installed with a base OS install
+* gsoap - may be optained under Fedora Core with "yum install gsoap gsoap-devel"
 
 
 Building:
@@ -19,12 +19,12 @@ Building:
 
 Must run the gSOAP stub compilers as shown below and compile with g++.
 
->wsdl2h -s -o nwnwm.h \
->	http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc?wsdl
->soapcpp2 -i nwnwm.h
->g++ listnwns.cpp \
->	soapC.cpp soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.cpp \
->	-o listnwns -lgsoap++ -lgsoapck++ -lgsoapssl++ -lssl
+	wsdl2h -s -o nwnwm.h \
+		http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc?wsdl
+	soapcpp2 -i nwnwm.h
+	g++ listnwns.cpp \
+		soapC.cpp soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.cpp \
+		-o listnwns -lgsoap++ -lgsoapck++ -lgsoapssl++ -lssl
 
 
 Usage:
