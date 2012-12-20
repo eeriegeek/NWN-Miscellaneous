@@ -4,7 +4,7 @@ listnwnsstat.cpp README
 CGI program to generate an NWN server status. The status message is in the form
 of an HTML fragment targeted for embedding in an IFRAME. The query string is
 parsed for Product (NWN1/2) and ServerName. The CGI calls Skywing's substitute
-master server via the GetOnlineServerList web service method.
+master server via the LookupServerByName web service method.
 
 Requirements:
 -------------
