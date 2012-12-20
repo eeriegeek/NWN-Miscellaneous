@@ -3,10 +3,7 @@
 *
 * Convert protocol qualified URI to NWN application +connect command line.
 *
-* nwn1gcp:1.0.0.1:1024           len=(20)
-* nwn1gcp:254.254.254.254:65535  len=(29)
-*
-* MingGW: cc -Wall -o nwn1gcp.exe nwn1gcp.c
+* See the associated nwn1gcp.README.mardown file for detailed information.
 *
 * Copyright 2012 eerigeek - Licensed under http://opensource.org/licenses/MIT
 *
@@ -36,32 +33,37 @@
 #include <malloc.h>
 #include <unistd.h>
 
+#define NWN1_PROTO "nwn1gcp"
+#define NWN1_PROTO_PREFIX NWN1_PROTO":"
+#define NWN1_EXE_TEMPLATE "%s/nwmain.exe"
+#define NWN1_URI_ALLOWED "1234567890.:-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 int main(int argc, char* argv[])
 {
 	int len;
-	char* uri;
 	char* dir_tmp;
 	char* dir;
-	const char* command_template = "%s/nwmain.exe";
+	char* uri;
+
 	char command[2048];
 
 	if (argc != 2) return 1;
 
 	len = strlen(argv[0]);
-	if ( (len < 7) || (len > 1024) ) return 2;
+	if ( (len < 1) || (len > 1024) ) return 2;
 	dir_tmp = strdup(argv[0]);
 	if (dir_tmp == NULL) return 2;
 	dir = dirname(dir_tmp);
-	if (dir == NULL) return 2;
+	if ( (dir == NULL) || (strlen(dir) < 1) ) return 2;
 
 	len = strlen(argv[1]);
-	if ( (len < 20) || (len > 29) ) return 3;
+	if ( (len < 1) || (len > 512) ) return 3;
 	uri = argv[1];
-	if (strstr(uri,"nwn1gcp:") != uri) return 3;
-	uri += 8;
-	if ( strspn(uri,"1234567890.:") != strlen(uri) ) return 3;
+	if (strstr(uri,NWN1_PROTO_PREFIX) != uri) return 3;
+	uri += strlen(NWN1_PROTO_PREFIX);
+	if ( strspn(uri,NWN1_URI_ALLOWED) != strlen(uri) ) return 3;
  
-	sprintf(command,command_template,dir);
+	sprintf(command,NWN1_EXE_TEMPLATE,dir);
 
 	if ( chdir(dir) != 0 ) return 4;
 	free(dir_tmp);
