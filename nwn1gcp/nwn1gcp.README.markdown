@@ -1,17 +1,27 @@
 README
 ======
 
-nwn1gcp is a simple program which acts as a filter/launcher to convert
-nwn1gcp protocol qualified URIs to a command line capable of launching
-the NWN application with the proper +connect command line arguments.
+The program nwn1gcp.exe is a simple helper filter to allow NWN to
+be launched from a URI (from a bookmark or html page). It's single
+purpose is to convert protocol qualified URIs of the form:
 
-URIs for protocol nwn1gcp are expected in the form:
+	 nwn1gcp:<connect_string>
+
+to a correct command line capable of launching the NWN application
+with the +connect command line option. URIs for protocol nwn1gcp
+are expected in one of the forms as the single command argument:
 
 	nwn1gcp:127.0.0.1:5121
+	nwn1gcp:nwn.example.com:5121
 
-which will be transformed to a command line such as:
+These examples will be transformed to a command line and executed as:
 
-	nwmain.exe +connect 127.0.0.1:5121
+	C:\Games\NWN1\nwmain.exe +connect 127.0.0.1:5121
+	C:\Games\NWN1\nwmain.exe +connect nwn.example.com:5121
+
+In general, any valid IP address or DNS name should work. The port
+specification is optional if the server is running on the default
+port of 5121.
 
 Files:
 ------
@@ -25,11 +35,11 @@ Files:
 
 Building:
 ---------
-Example of building with the MingGW tools (optional.)
+If you wish to build the .exe from source, this is an example using MingGW:
 
 	set path=C:\Software\MinGW\bin;%path%
 	windres nwn1gcp.rc -O coff -o nwn1gcp.res
-	cc -Wall -o nwn1gcp.exe nwn1gcp.c nwn1gcp.res
+	cc -Wall -Wextra -O2 -o nwn1gcp.exe nwn1gcp.c nwn1gcp.res
 
 Installation:
 -------------
@@ -44,7 +54,7 @@ Uninstalling:
 -------------
 
 1) Change to the NWN main directory, and delete all nwn1gcp.* files.
-2) Run regedit and OPEN HKEY_CLASSES_ROOT tree, select nwn1gcp and delete it.
+2) Run regedit and expand HKEY_CLASSES_ROOT tree, select nwn1gcp and delete it.
 
 License:
 --------
