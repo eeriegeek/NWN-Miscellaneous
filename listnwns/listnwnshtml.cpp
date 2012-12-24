@@ -98,6 +98,7 @@ void print_header()
 			"<th>Local Vault</th><th>Private Server</th>"
 			"<th>ELC</th><th>ILR</th>"
 			"<th>Build</th><th>Exp</th>"
+			"<th>Server Description</th>"
 			"<th>Module Description</th>"
 			"</tr>\n"
 		);
@@ -123,6 +124,7 @@ void print_header()
 			"<th>Local Vault</th><th>Private Server</th>"
 			"<th>ELC</th><th>ILR</th>"
 			"<th>Build</th><th>Exp</th>"
+			"<th>Server Description</th>"
 			"<th>Module Description</th>"
 			"<th>PWC URL</th>"
 			"</tr>\n"
@@ -146,6 +148,7 @@ void print_ith_row( ns4__NWGameServer* p, int i )
 
     string encServerName        = html_encode_special(p->ServerName);
     string encModuleName        = html_encode_special(p->ModuleName);
+    string encServerDescription = html_encode_special(p->ServerDescription);
     string encModuleDescription = html_encode_special(p->ModuleDescription);
 
 	if (g_is_nwn1) {
@@ -162,6 +165,7 @@ void print_ith_row( ns4__NWGameServer* p, int i )
 			"<td class=\"s_number\">%u</td><td class=\"s_number\">%u</td>"   /* LocalVault, PrivateServer */
 			"<td class=\"s_number\">%u</td><td class=\"s_number\">%u</td>"   /* ELCEnforced, ILREnforced */
 			"<td class=\"s_number\">%u</td><td class=\"s_number\">%u</td>"   /* BuildNumber, ExpansionsMask */
+			"<td class=\"s_text\">%s</td>"                                   /* ServerDescription */
 			"<td class=\"s_text\">%s</td>"                                   /* ModuleDescription */
 			"</tr>\n",
 			(i+1),
@@ -175,6 +179,7 @@ void print_ith_row( ns4__NWGameServer* p, int i )
 			*(p->LocalVault), *(p->PrivateServer),
 			*(p->ELCEnforced), *(p->ILREnforced) ,
 			*(p->BuildNumber), *(p->ExpansionsMask),
+			encServerDescription.c_str(),
 			encModuleDescription.c_str()
 		);
 		// Unused Fields:
@@ -204,6 +209,7 @@ void print_ith_row( ns4__NWGameServer* p, int i )
 			"<td class=\"s_number\">%u</td><td class=\"s_number\">%u</td>"   /* LocalVault, PrivateServer */
 			"<td class=\"s_number\">%u</td><td class=\"s_number\">%u</td>"   /* ELCEnforced, ILREnforced */
 			"<td class=\"s_number\">%u</td><td class=\"s_number\">%u</td>"   /* BuildNumber, ExpansionsMask */
+			"<td class=\"s_text\">%s</td>"                                   /* ServerDescription */
 			"<td class=\"s_text\">%s</td>"                                   /* ModuleDescription */
 			"<td class=\"s_title\"><a href=\"%s\">%s</a></td>"               /* PWCUrl */
 			"</tr>\n",
@@ -219,6 +225,7 @@ void print_ith_row( ns4__NWGameServer* p, int i )
 			*(p->LocalVault), *(p->PrivateServer),
 			*(p->ELCEnforced), *(p->ILREnforced) ,
 			*(p->BuildNumber), *(p->ExpansionsMask),
+			encServerDescription.c_str(),
 			encModuleDescription.c_str(),
 			p->PWCUrl,((strlen(p->PWCUrl)>0)?("PWC"):(""))
 		);
