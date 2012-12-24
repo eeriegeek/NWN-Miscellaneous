@@ -84,14 +84,16 @@ void print_header()
 			"<html xmlns=\"http://www.w3.org/1999/xhtml\">\n"
 			"<head>\n"
 			"<title>NWN1 Server List</title>\n"
-			"<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/listnwnshtml.css\" />\n"
-			//"<link rel=\"stylesheet\" type=\"text/css\" href=\"listnwnshtml.css\" />\n"
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"listnwnshtml.css\" />\n"
+			//"<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/listnwnshtml.css\" />\n"
 			"</head>\n"
 			"<body>\n"
 			"<table>\n"
 			"<tr>"
 			"<th>Row</th>"
-			"<th>Server Name</th><th>Server Address</th>"
+			"<th>Server Name</th>"
+			"<th>Site URL</th>"
+			"<th>Server Address</th>"
 			"<th>Game Type</th>"
 			"<th>Module Name</th>"
 			"<th>Player Count</th><th>Player Limit</th><th>Min Level</th><th>Max Level</th><th>PvP Level</th>"
@@ -107,15 +109,15 @@ void print_header()
 			"<html xmlns=\"http://www.w3.org/1999/xhtml\">\n"
 			"<head>\n"
 			"<title>NWN2 Server List</title>\n"
-			"<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/listnwnshtml.css\" />\n"
-			//"<link rel=\"stylesheet\" type=\"text/css\" href=\"listnwnshtml.css\" />\n"
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"listnwnshtml.css\" />\n"
+			//"<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/listnwnshtml.css\" />\n"
 			"</head>\n"
 			"<body>\n"
 			"<table>\n"
 			"<tr>"
 			"<th>Row</th>"
 			"<th>Server Name</th>"
-			"<th>URL</th>"
+			"<th>Site URL</th>"
 			"<th>Server Address</th>"
 			"<th>Game Type</th>"
 			"<th>Module Name</th>"
@@ -152,10 +154,32 @@ void print_ith_row( ns4__NWGameServer* p, int i )
     string encModuleDescription = html_encode_special(p->ModuleDescription);
 
 	if (g_is_nwn1) {
+
+		char url[256]; url[0] = '\0';
+		char* url_b = strstr(p->ServerDescription,"http://");
+		if (url_b) {
+			size_t url_l = strspn(url_b,"1234567890.:-/_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			if ( (url_l > 0) && (url_l < 256) ) {
+				memcpy(url,url_b,url_l);
+				url[url_l] = '\0';
+			}
+		}
+		if (strlen(url) < 1) {
+			char* url_b = strstr(p->ModuleDescription,"http://");
+			if (url_b) {
+				size_t url_l = strspn(url_b,"1234567890.:-/_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+				if ( (url_l > 0) && (url_l < 256) ) {
+					memcpy(url,url_b,url_l);
+					url[url_l] = '\0';
+				}
+			}
+		}
+
 		printf(
 			"<tr>"
 			"<td class=\"s_number\">%u</td>"                                 /* Row Count */
 			"<td class=\"s_title\">%s</td>"                                  /* ServerName */
+			"<td class=\"s_title\"><a href=\"%s\">%s</a></td>"               /* ModuleUrl */
 			"<td class=\"s_title\"><a href=\"nwn1gcp:%s\">%s</a></td>"       /* ServerAddress (w/ URL) */
 			"<td class=\"s_code\">%s</td>"                                   /* GameType */
 			"<td class=\"s_title\">%s</td>"                                  /* ModuleName */
@@ -170,6 +194,7 @@ void print_ith_row( ns4__NWGameServer* p, int i )
 			"</tr>\n",
 			(i+1),
 			encServerName.c_str(),
+			url,((strlen(url)>0)?("URL"):("")),
 			p->ServerAddress, p->ServerAddress,
 			game_type_label[*(p->GameType)],
 			encModuleName.c_str(),
