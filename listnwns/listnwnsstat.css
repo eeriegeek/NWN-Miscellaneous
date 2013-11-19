@@ -1,14 +1,14 @@
-body			{ color:#333366; background-color:#000000; background-image:url("/images/dragon_bg.jpg"); }
-a				{ text-decoration:none; } 
-div.s_srvnam	{ display:inline; white-space:nowrap; position:absolute; top:10px;  left:15px;  font-size:1.2em; font-style:oblique; font-weight:bold; }
-div.s_modnam	{ display:inline; white-space:nowrap; position:absolute; top:38px;  left:80px;  font-size:0.6em; font-style:italic;  }
-div.s_lnkmodnam	{ display:none;   white-space:nowrap; position:absolute; top:38px;  left:80px;  font-size:0.6em; font-style:italic;  }
-div.s_srvadr	{ display:none; white-space:nowrap; position:absolute; top:56px;  left:44px;  font-size:1em;   font-style:normal; color:#663333; }
-div.s_lnksrvadr	{ display:inline; white-space:nowrap; position:absolute; top:56px;  left:44px;  font-size:1em;   font-style:normal; color:#663333; }
-div.sl_gamtyp	{ display:inline; white-space:nowrap; position:absolute; top:84px;  left:8px;   font-size:0.6em; font-style:oblique; font-weight:100; color:#111133; }
-div.s_gamtyp	{ display:inline; white-space:nowrap; position:absolute; top:100px; left:8px;   font-size:1em;   font-style:oblique; }
-div.sl_player	{ display:inline; white-space:nowrap; position:absolute; top:84px;  left:208px; font-size:0.6em; font-style:oblique; font-weight:100; color:#111133; }
-div.s_actplr	{ display:inline; white-space:nowrap; position:absolute; top:100px; left:190px; font-size:1em;   font-weight:bold; }
-div.sl_actmax	{ display:inline; white-space:nowrap; position:absolute; top:100px; left:216px; font-size:1em;   font-weight:bold; color:#111133}
-div.s_maxplr	{ display:inline; white-space:nowrap; position:absolute; top:100px; left:224px; font-size:1em;   font-weight:bold; }
-div.s_errorm	{ display:block; color:#AA6666; font-size:0.8em; text-align:center; padding:10px; font-weight:bold; }
+body    		{ color:#333366; background-color:#000000; background-image:url("/images/dragon_bg.jpg"); }
+a    			{ text-decoration:none; } 
+div.s_srvnam    { display:inline; white-space:nowrap; position:absolute; top:10px;  left:15px;  font-size:1.2em; font-style:oblique; font-weight:bold; }
+div.s_modnam    { display:inline; white-space:nowrap; position:absolute; top:38px;  left:80px;  font-size:0.6em; font-style:italic;  }
+div.s_lnkmodnam { display:none;   white-space:nowrap; position:absolute; top:38px;  left:80px;  font-size:0.6em; font-style:italic;  }
+div.s_srvadr    { display:none; white-space:nowrap; position:absolute; top:56px;  left:44px;  font-size:1em;   font-style:normal; color:#663333; }
+div.s_lnksrvadr { display:inline; white-space:nowrap; position:absolute; top:56px;  left:44px;  font-size:1em;   font-style:normal; color:#663333; }
+div.sl_gamtyp   { display:inline; white-space:nowrap; position:absolute; top:84px;  left:8px;   font-size:0.6em; font-style:oblique; font-weight:100; color:#111133; }
+div.s_gamtyp    { display:inline; white-space:nowrap; position:absolute; top:100px; left:8px;   font-size:1em;   font-style:oblique; }
+div.sl_player   { display:inline; white-space:nowrap; position:absolute; top:84px;  left:208px; font-size:0.6em; font-style:oblique; font-weight:100; color:#111133; }
+div.s_actplr    { display:inline; white-space:nowrap; position:absolute; top:100px; left:190px; font-size:1em;   font-weight:bold; }
+div.sl_actmax   { display:inline; white-space:nowrap; position:absolute; top:100px; left:216px; font-size:1em;   font-weight:bold; color:#111133}
+div.s_maxplr    { display:inline; white-space:nowrap; position:absolute; top:100px; left:224px; font-size:1em;   font-weight:bold; }
+div.s_errorm    { display:block; color:#AA6666; font-size:0.8em; text-align:center; padding:10px; font-weight:bold; }
