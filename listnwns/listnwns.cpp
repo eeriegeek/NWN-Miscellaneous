@@ -1,67 +1,31 @@
-/******************************************************************************
-* listnwns.cpp
-*
-* Simple command line tool to list NWN 1 & 2 servers using the web service
-* developed by Skywing as a replacement for legacy gamespy support. This tool
-* calls the GetOnlineServerList, LookupServerByName, and LookupServerByAddress
-* web service methods.
-*
-* Requirements:
-*
-* ssl - usually installed with a base OS install
-* gsoap - may be optained under Fedora Core with "yum install gsoap gsoap-devel"
-*
-* Building:
-*
-* Must run the gSOAP stub compilers as shown below and compile with g++.
-*
-wsdl2h -s -o nwnwm.h \
-	http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc?wsdl
-soapcpp2 -i nwnwm.h
-g++ listnwns.cpp \
-	soapC.cpp soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.cpp \
-	-o listnwns -lgsoap++ -lgsoapck++ -lgsoapssl++ -lssl
-*
-* Usage:
-* 
-* List all known servers for the given version/product (i.e. NWN1 or NWN2.)
-*
-*   listnwns NWN1|NWN2
-*
-* List known servers with the given NWN version and NWN server name (not DNS!)
-*
-*   listnwns NWN1|NWN2 <servername>
-*
-* List the unique server with the given NWN version and IP address:port.
-*
-*   listnwns NWN1|NWN2 <ipaddress:port>
-*
-*
-* Copyright 2012 eerigeek - Licensed under http://opensource.org/licenses/MIT
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-******************************************************************************/
+//-----------------------------------------------------------------------------
+// listnwns.cpp - List active NWN servers
+//
+// See the README file "listnwns.README.markdown" for further details.
+//
+// Copyright 2012-2013 eeriegeek - License: http://opensource.org/licenses/MIT
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//-----------------------------------------------------------------------------
 
-#include "soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.h"
-#include "soapBasicHttpBinding_USCOREINWNMasterServerAPIService.h"
-#include "BasicHttpBinding_USCOREINWNMasterServerAPI.nsmap"
+#include "WSHttpBinding_USCOREINWNMasterServerAPI.nsmap"
+#include "soapWSHttpBinding_USCOREINWNMasterServerAPIProxy.h"
 
 void print_usage(const char* pname)
 {
@@ -89,11 +53,12 @@ void print_ith_row( ns4__NWGameServer* p, int i )
 
 int main(int argc, char* argv[])
 {
+
 	if ( (argc < 2) || (argc > 3) ) { print_usage(argv[0]); return 1; }
 	if ( ! ( (strcmp("NWN1",argv[1])==0) || (strcmp("NWN2",argv[1])==0) ) ) { print_usage(argv[0]); return 1; }
 
-	BasicHttpBinding_USCOREINWNMasterServerAPIProxy s;
-	s.soap_endpoint  = "http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc/ASMX";
+	WSHttpBinding_USCOREINWNMasterServerAPIProxy s;
+	s.soap_endpoint = "http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc/ASMX";
 
 	if ( argc == 2 ) {
 		//fprintf(stderr,"Listing Servers for [%s]\n",argv[1]);
@@ -115,10 +80,13 @@ int main(int argc, char* argv[])
 		} else {
 			s.soap_stream_fault(std::cerr);
 		}
+		free(gosl->Product);
+		delete goslr;
+		delete gosl;
 
-	} else /* if ( argc == 3 ) */ {
+	} else { // if ( argc == 3 )
 
-		if ( strspn(argv[2],"1234567890") > 0 ) { /* starts with a number */
+		if ( strspn(argv[2],"1234567890") > 0 ) { // starts with a number 
 			//fprintf(stderr,"Searching for Product [%s], Server Address [%s]\n",argv[1],argv[2]);
 
 			struct _ns1__LookupServerByAddress* lsba          = new _ns1__LookupServerByAddress;
@@ -137,8 +105,12 @@ int main(int argc, char* argv[])
 			} else {
 				s.soap_stream_fault(std::cerr);
 			}
+			free(lsba->Product);
+			free(lsba->ServerAddress);
+			delete lsbar;
+			delete lsba;
 
-		} else { /* starts with not a number */
+		} else { // starts with not a number
 			//fprintf(stderr,"Searching for Product [%s], Server Name [%s]\n",argv[1],argv[2]);
 
 			struct _ns1__LookupServerByName* lsbn          = new _ns1__LookupServerByName;
@@ -160,6 +132,10 @@ int main(int argc, char* argv[])
 			} else {
 				s.soap_stream_fault(std::cerr);
 			}
+			free(lsbn->Product);
+			free(lsbn->ServerName);
+			delete lsbnr;
+			delete lsbn;
 
 		}
 

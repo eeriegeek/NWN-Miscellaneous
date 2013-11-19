@@ -1,51 +1,47 @@
 listnwnsstat.cpp README
 =======================
 
-CGI program to generate an NWN server status. The status message is in the form
-of an HTML fragment targeted for embedding in an IFRAME. The query string is
-parsed for Product (NWN1/2) and ServerName. The CGI calls Skywing's substitute
-master server via the LookupServerByName web service method.
+This is a CGI program to display NWN server status on an HTML page. The status
+message is in the form of an HTML fragment targeted for embedding in an IFRAME.
+The query string is parsed for Product (NWN1/2) and ServerName. The CGI script
+calls Skywing's substitute master server LookupServerByName SOAP method.
 
 Requirements:
 -------------
 
-SSL - Usually installed with the base OS install.
+* gSOAP
+    The gSOAP toolkit is required to build this tool. The latest version
+    used to build and test is gSOAP-2.8.16. The packages may be obtained
+    through the OS package tool or built from source. The gSOAP website
+    is: http://www.cs.fsu.edu/~engelen/soap.html for source code.
 
-gSOAP - May be obtained through the usual package installs on some systems.
-For example on Fedora Core try "yum install gsoap gsoap-devel".  Otherwise,
-the gSOAP source can be downloaded from http://sourceforge.net/projects/gsoap2/.
-The lister has been successfully build using gSOAP version 2.8.3, there is
-currently an unresolved problem with some later versions such as 2.8.12.
 
 Building:
 ---------
 
-Run the gSOAP stub compilers as shown below, then compile with g++.
+A basic Makefile is provided. Check the variables set at the top of the file,
+especially SOAP_INCS and SOAP_LIBS so the gSOAP installation can be located.
+Also make sure the gSOAP bin directory is in your system path before building.
 
-	wsdl2h -s -o nwnwm.h \
-		http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc?wsdl
+    make listnwnsstat
 
-	soapcpp2 -i nwnwm.h
-
-	g++ listnwnsstat.cpp \
-		soapC.cpp soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.cpp \
-		-o listnwnsstat.cgi -lgsoap++ -lgsoapck++ -lgsoapssl++ -lssl
 
 Installation:
 -------------
 
 The CGI programs need to be placed in the web server's cgi-bin directory
 or otherwise configured to run as CGI programs. The generated HTML looks
-for its CSS file "/css/" relative to the website root path. Some paths may
-need adjustment depending on the web server configuration.
+for its CSS file "/css/listnwnsstat.css" relative to the website root path.
+Some paths may need adjustment depending on the web server configuration.
 
 	cp listnwnsstat.cgi $WEB_HOME/cgi-bin
 	cp listnwnsstat.css $WEB_HOME/html/css
 
+
 Usage:
 ------
 
-This CGI program is intended to be invoke through an IFRAME. A server status
+This CGI program is intended to be invoked through an IFRAME. A server status
 as HTML with styled DIV tags is returned with basic fields such as server name
 and IP and the number of active players.
 
@@ -56,10 +52,11 @@ and IP and the number of active players.
 	frameborder=1 scrolling=auto>
 	</IFRAME>
 
+
 License:
 --------
 
-Copyright 2012 eerigeek - Licensed under http://opensource.org/licenses/MIT
+Copyright 2012-2013 eeriegeek - License: http://opensource.org/licenses/MIT
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,30 +1,31 @@
 listnwns.cpp README
 ===================
 
-Simple command line tool to list NWN 1 & 2 servers using the web service
-developed by Skywing as a replacement for legacy gamespy support. This tool
-calls the GetOnlineServerList, LookupServerByName, and LookupServerByAddress
-web service methods.
+A simple command line tool for listing currently running  NWN 1 & 2 servers
+using the web SOAP service developed by Skywing as a replacement for legacy
+gamespy support. This tool calls the GetOnlineServerList, LookupServerByName,
+and LookupServerByAddress web service methods from the SOAP service, and
+constructs a list of running servers.
 
 
 Requirements:
 -------------
 
-* ssl - usually installed with a base OS install
-* gsoap - may be optained under Fedora Core with "yum install gsoap gsoap-devel"
+* gSOAP
+	The gSOAP toolkit is required to build this tool. The latest version
+	used to build and test is gSOAP-2.8.16. The packages may be obtained
+	through the OS package tool or built from source. The gSOAP website
+	is: http://www.cs.fsu.edu/~engelen/soap.html for source code.
 
 
 Building:
 ---------
 
-Must run the gSOAP stub compilers as shown below and compile with g++.
+A basic Makefile is provided. Check the variables set at the top of the file,
+especially SOAP_INCS and SOAP_LIBS so the gSOAP installation can be located.
+Also make sure the gSOAP bin directory is in your system path before building.
 
-	wsdl2h -s -o nwnwm.h \
-		http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc?wsdl
-	soapcpp2 -i nwnwm.h
-	g++ listnwns.cpp \
-		soapC.cpp soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.cpp \
-		-o listnwns -lgsoap++ -lgsoapck++ -lgsoapssl++ -lssl
+	make listnwns
 
 
 Usage:
@@ -46,7 +47,7 @@ List the unique server with the given NWN version and IP address:port.
 License:
 --------
 
-Copyright 2012 eerigeek - Licensed under http://opensource.org/licenses/MIT
+Copyright 2012-2013 eeriegeek - License: http://opensource.org/licenses/MIT
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

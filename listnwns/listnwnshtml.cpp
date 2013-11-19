@@ -1,36 +1,34 @@
-/******************************************************************************
-* listnwnshtml.cpp
-*
-* See the associated "listnwnshtml.README.*" file for more information.
-*
-* Copyright 2012 eerigeek - Licensed under http://opensource.org/licenses/MIT
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-******************************************************************************/
+//-----------------------------------------------------------------------------
+// listnwnshtml.cpp - CGI script to list active NWN servers
+//
+// See the README file "listnwnshtml.README.markdown" for further details.
+//
+// Copyright 2012-2013 eeriegeek - License: http://opensource.org/licenses/MIT
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//-----------------------------------------------------------------------------
 
 #include <string>
 using std::string;
 
-#include "soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.h"
-#include "soapBasicHttpBinding_USCOREINWNMasterServerAPIService.h"
-#include "BasicHttpBinding_USCOREINWNMasterServerAPI.nsmap"
+#include "WSHttpBinding_USCOREINWNMasterServerAPI.nsmap"
+#include "soapWSHttpBinding_USCOREINWNMasterServerAPIProxy.h"
 
 bool g_is_nwn1 = true;
 
@@ -263,10 +261,8 @@ int main(int argc, char* argv[])
 	strcpy(product,"NWN1");
 	if ( strstr(argv[0],"listnwns2html.cgi")!=NULL ) { strcpy(product,"NWN2"); g_is_nwn1 = false; }
 
-	char guardbuf1[1024];
-	BasicHttpBinding_USCOREINWNMasterServerAPIProxy s;
-	char guardbuf2[1024];
-	s.soap_endpoint  = "http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc/ASMX";
+	WSHttpBinding_USCOREINWNMasterServerAPIProxy s;
+	s.soap_endpoint = "http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc/ASMX";
 
 	struct _ns1__GetOnlineServerList* gosl          = new _ns1__GetOnlineServerList;
 	struct _ns1__GetOnlineServerListResponse* goslr = new _ns1__GetOnlineServerListResponse;
@@ -287,6 +283,9 @@ int main(int argc, char* argv[])
 	} else {
 		s.soap_stream_fault(std::cerr);
 	}
+
+	delete goslr;
+	delete gosl;
 
 	s.destroy();
 

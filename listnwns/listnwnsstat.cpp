@@ -1,36 +1,35 @@
-/******************************************************************************
-* listnwnsstat.cpp
-*
-* See the associated listnwnsstat.README.markdown file for details.
-*
-* Copyright 2012 eerigeek - Licensed under http://opensource.org/licenses/MIT
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-******************************************************************************/
+//-----------------------------------------------------------------------------
+// listnwnsstat.cpp - CGI script to construct HTML status of a NWN server
+//
+// See the README file "listnwnsstat.README.markdown" for further details.
+//
+// Copyright 2012-2013 eeriegeek - License: http://opensource.org/licenses/MIT
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//-----------------------------------------------------------------------------
 
 #include <string>
 using std::string;
 
-#include "soapBasicHttpBinding_USCOREINWNMasterServerAPIProxy.h"
-#include "soapBasicHttpBinding_USCOREINWNMasterServerAPIService.h"
-#include "BasicHttpBinding_USCOREINWNMasterServerAPI.nsmap"
+#include "WSHttpBinding_USCOREINWNMasterServerAPI.nsmap"
+#include "soapWSHttpBinding_USCOREINWNMasterServerAPIProxy.h"
+
 
 /* Converts a hex character to its integer value */
 char from_hex(char ch) {
@@ -254,13 +253,9 @@ int main(int argc, char* argv[])
 	if ( b_ptr != NULL ) *b_ptr='\0';
 	char* product = url_decode(a_ptr);
 	if ( b_ptr != NULL ) *b_ptr='&';
-
 	//printf("Product [%s], ServerName [%s]\n",product,server_name);
 
-	// Scary... declaring the proxy seems to overrun memory, protect it.
-	char guardbuf1[1024];
-	BasicHttpBinding_USCOREINWNMasterServerAPIProxy s;
-	char guardbuf2[1024];
+	WSHttpBinding_USCOREINWNMasterServerAPIProxy s;
 	s.soap_endpoint  = "http://api.mst.valhallalegends.com/NWNMasterServerAPI/NWNMasterServerAPI.svc/ASMX";
 
 	struct _ns1__LookupServerByName* lsbn          = new _ns1__LookupServerByName;
@@ -293,7 +288,12 @@ int main(int argc, char* argv[])
 	}
 	print_footer();
 
+	delete lsbnr;
+	delete lsbn;
 	s.destroy();
+
+	free(product);
+	free(server_name);
 
 	return 0;
 } 
