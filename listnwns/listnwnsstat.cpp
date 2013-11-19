@@ -280,6 +280,7 @@ int main(int argc, char* argv[])
 			for ( int i = 0; i < n; i++ ) {
 				ns4__NWGameServer* p = lsbnr->LookupServerByNameResult->NWGameServer[i];
 				print_ith_row(p,i);
+				break; // just the first hit for now
 			}
 		} else {
 			string m = "No information found for server name: ";
